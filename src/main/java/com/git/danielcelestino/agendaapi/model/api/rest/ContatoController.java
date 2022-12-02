@@ -7,6 +7,8 @@ import java.util.Optional;
 
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -37,8 +39,12 @@ public class ContatoController {
 	private ContatoRepository contatoRepository;
 
 	@GetMapping
-	public List<Contato> findAll() {
-		return contatoRepository.findAll();
+	public Page<Contato> findAll(
+			@RequestParam(value = "page", defaultValue = "0") Integer pagina, 
+			@RequestParam(value = "size", defaultValue = "10") Integer tamanhoPagina
+			) {
+		PageRequest pageRequest = PageRequest.of(pagina, tamanhoPagina);
+		return contatoRepository.findAll(pageRequest);
 	}
 
 	@GetMapping("{id}")
